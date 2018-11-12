@@ -2,7 +2,7 @@ class InputField extends React.Component {
     // 2. 必須實作 render 方法：
     //    透過該方法回傳的元素，讓 React 瞭解要如何繪製該元件在頁面上
     render() {
-        return <div>InputField</div>
+        return <input {...this.props} type="text" />
     }
 }
 

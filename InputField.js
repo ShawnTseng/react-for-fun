@@ -1,11 +1,51 @@
 class InputField extends React.Component {
-    // 2. 必須實作 render 方法：
-    //    透過該方法回傳的元素，讓 React 瞭解要如何繪製該元件在頁面上
+    constructor(props, context) {
+        super(props, context);
+        this.state = { value: props.value || '' };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+    }
+
     render() {
-        return <input {...this.props} type="text" />
+        return <input
+            {...this.props}
+            type="text"
+            value={this.state.value}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+        />
+    }
+
+    /**
+     * 更新value
+     * @param {元件} e 
+     */
+    handleChange(e) {
+        this.setState({ value: e.target.value });
+    }
+
+    /**
+     * 按下鍵盤時
+     * @param {元件} e 
+     */
+    handleKeyDown(e) {
+        const { onKeyDown, onSubmitEditing } = this.props;
+        const { value } = this.state;
+        switch (e.keyCode) {
+            case 13:
+                if (value.trim()) {
+                    onSubmitEditing && onSubmitEditing(value);
+                }
+                this.setState({ value: '' });
+                break;
+        }
+        onKeyDown && onKeyDown(e);
     }
 }
 
-// 3. 將元件類別 (InputField) 定義在 window.App 下：
-//    這可以讓其他 JS 檔使用該元件類別
+InputField.propTypes = {
+    onSubmitEditing: React.PropTypes.func
+};
+
 window.App.InputField = InputField;

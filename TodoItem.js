@@ -16,10 +16,14 @@ class TodoItem extends React.Component {
     }
 
     renderViewMode() {
-        const { title, completed, onDelete } = this.props;
+        const { title, completed, onDelete, onToggle } = this.props;
         return (
             <div>
-                <input type="checkbox" checked={completed} />
+                <input
+                    type="checkbox"
+                    checked={completed}
+                    onChange={() => onToggle && onToggle(!completed)}
+                />
                 <span onDoubleClick={this.toggleEditMode}>{title}</span>
                 <button onClick={() => onDelete && onDelete()}>x</button>
             </div>
@@ -27,21 +31,35 @@ class TodoItem extends React.Component {
     }
 
     renderEditMode() {
+        const { title, onUpdate } = this.props;
+
         return (
             <InputField
-                autoFocus                    // autoFocus 讓使用者切換到編輯模式後，可以立即編打
+                autoFocus
                 placeholder="編輯待辦事項"
-                value={this.props.title}
-                onBlur={this.toggleEditMode} // 當使用者點擊其他地方，則切換為「瀏覽模式」
-                onKeyDown={(e) => {          // 當使用者按下 ESC，則切換為「瀏覽模式」
+                value={title}
+                onBlur={this.toggleEditMode}
+                onKeyDown={(e) => {
                     if (e.keyCode === 27) {
                         e.preventDefault();
                         this.toggleEditMode();
                     }
                 }}
+                onSubmitEditing={(content) => {
+                    onUpdate && onUpdate(content);
+                    this.toggleEditMode();
+                }}
             />
         );
     }
 }
+
+TodoItem.propTypes = {
+    title: React.PropTypes.string.isRequired,
+    completed: React.PropTypes.bool.isRequired,
+    onUpdate: React.PropTypes.func,
+    onToggle: React.PropTypes.func,
+    onDelete: React.PropTypes.func
+};
 
 window.App.TodoItem = TodoItem;

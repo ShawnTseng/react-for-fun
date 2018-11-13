@@ -10,7 +10,6 @@ class TodoHeader extends React.Component {
     }
 }
 
-// 型別限定
 TodoHeader.propTypes = {
     title: React.PropTypes.string,
     username: React.PropTypes.string,

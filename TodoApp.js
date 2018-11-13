@@ -88,7 +88,7 @@ class TodoApp extends React.Component {
                     todos={todos}
                     onUpdateTodo={this.updateTodosBy(_updateTodo)}
                     onToggleTodo={this.updateTodosBy(_toggleTodo)}
-                    onDeleteTodo={this.updateTodosBy(_updateTodo)}
+                    onDeleteTodo={this.updateTodosBy(_deleteTodo)}
                 />
             </div>
         );

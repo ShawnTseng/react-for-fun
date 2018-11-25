@@ -1,45 +1,21 @@
 const {
+    // 1. 引入 TodoActions 和 TodoStore
+    TodoActions,
+    TodoStore
+} = window.App;
+
+const {
     InputField,
     TodoHeader,
     TodoList
 } = window.App;
 
-const _createTodo = (todos, title) => {
-    todos.push({
-        id: todos[todos.length - 1].id + 1,
-        title,
-        completed: false
-    });
-    return todos;
-};
-
-const _updateTodo = (todos, id, title) => {
-    const target = todos.find((todo) => todo.id === id);
-    if (target) {
-        target.title = title;
-    }
-    return todos;
-};
-
-const _toggleTodo = (todos, id, completed) => {
-    const target = todos.find((todo) => todo.id === id);
-    if (target) {
-        target.completed = completed;
-    }
-    return todos;
-};
-
-const _deleteTodo = (todos, id) => {
-    const idx = todos.findIndex((todo) => todo.id === id);
-    if (idx !== -1) todos.splice(idx, 1);
-    return todos;
-};
-
 class TodoApp extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            todos: []
+            // 3. 初始資料改為從 TodoStore 中拿取
+            todos: TodoStore.getAll()
         };
     }
 
@@ -66,24 +42,33 @@ class TodoApp extends React.Component {
                 />
                 <InputField
                     placeholder="新增待辦清單"
-                    onSubmitEditing={this.updateTodosBy(_createTodo)}
+                    onSubmitEditing={TodoActions._createTodo}
                 />
                 <TodoList
                     todos={todos}
-                    onUpdateTodo={this.updateTodosBy(_updateTodo)}
-                    onToggleTodo={this.updateTodosBy(_toggleTodo)}
-                    onDeleteTodo={this.updateTodosBy(_deleteTodo)}
+                    onUpdateTodo={TodoActions._updateTodo}
+                    onToggleTodo={TodoActions._toggleTodo}
+                    onDeleteTodo={TodoActions._deleteTodo}
                 />
             </div>
         );
     }
 
     componentDidMount() {
-        // Initialize the data of todos
-        fetch('./todos.json')
-            .then(response => response.json())
-            .then(todos => this.setState({ todos }));
+        // 4. 向 Server 請求資料改為調用 TodoActions
+        TodoActions.loadTodos();
+        // 5. 向 TodoStore 註冊監聽器：
+        //    當監聽器被觸發，便讓 state 與 TodoStore 資料同步
+        this._removeChangeListener = TodoStore.addChangeListener(
+            () => this.setState({ todos: TodoStore.getAll() })
+        );
     }
+
+    componentWillUnmount() {
+        // 6. 向 TodoStore 註銷監聽器
+        this._removeChangeListener();
+    }
+
 }
 
 window.App.TodoApp = TodoApp;

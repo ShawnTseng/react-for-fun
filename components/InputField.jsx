@@ -1,10 +1,7 @@
 class InputField extends React.Component {
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            value: props.value || ''
-        };
-
+        this.state = { value: props.value || '' };
         this.handleChange = this.handleChange.bind(this);
         this.handleKeyDown = this.handleKeyDown.bind(this);
     }
@@ -37,17 +34,13 @@ class InputField extends React.Component {
             onKeyDown,
             onSubmitEditing
         } = this.props;
-        const {
-            value
-        } = this.state;
+        const { value } = this.state;
         switch (e.keyCode) {
             case 13:
                 if (value.trim()) {
                     onSubmitEditing && onSubmitEditing(value);
                 }
-                this.setState({
-                    value: ''
-                });
+                this.setState({ value: '' });
                 break;
         }
         onKeyDown && onKeyDown(e);

@@ -1,7 +1,7 @@
 const {
     ActionTypes,
     AppDispatcher
-} = window.app;
+} = window.App;
 
 window.App.TodoActions = {
     // 1. 一個 Action Creator 函數做兩件事
@@ -24,9 +24,10 @@ window.App.TodoActions = {
         //    註：同一個函數中，可以丟好幾個 action 物件，
         //    例如請求前丟一個，因為我們要將資料狀態改為 loading；
         //    請求成功或失敗，各丟不同的 action！
-        fetch('./../todos.json')
+        fetch('./todos.json')
             .then((response) => response.json())
-            .then((todos) => AppDispatcher.dispatch(
-                { type: ActionTypes.LOAD_TODOS_SUCCESS, todos }));
+            .then((todos) => {
+                AppDispatcher.dispatch({ type: ActionTypes.LOAD_TODOS_SUCCESS, todos });
+            });
     }
 }

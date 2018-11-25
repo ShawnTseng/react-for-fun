@@ -42,7 +42,7 @@ window.App.TodoStore = {
 
     // 3. 提供註冊改變事件的 API，並回傳註銷函數
     addChangeListener(callback) {
-        _emitter.removeListener(CHANGE_EVENT, callback);
+        _emitter.on(CHANGE_EVENT, callback);
         return () => _emitter.removeListener(CHANGE_EVENT, callback);
     },
 

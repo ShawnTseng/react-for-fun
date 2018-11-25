@@ -19,9 +19,7 @@ class TodoItem extends React.Component {
         const { title, completed, onDelete, onToggle } = this.props;
         return (
             <div>
-                <input
-                    type="checkbox"
-                    checked={completed}
+                <input type="checkbox" checked={completed}
                     onChange={() => onToggle && onToggle(!completed)}
                 />
                 <span onDoubleClick={this.toggleEditMode}>{title}</span>

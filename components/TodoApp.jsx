@@ -1,10 +1,6 @@
 const {
-    // 1. 引入 TodoActions 和 TodoStore
     TodoActions,
-    TodoStore
-} = window.App;
-
-const {
+    TodoStore,
     InputField,
     TodoHeader,
     TodoList
@@ -19,18 +15,6 @@ class TodoApp extends React.Component {
         };
     }
 
-    /**
-     * 更新代辦事項
-     * @param {新增、刪除、修改...等行為} updateFn 
-     */
-    updateTodosBy(updateFn) {
-        return (...args) => {
-            this.setState({
-                todos: updateFn(this.state.todos, ...args)
-            })
-        }
-    }
-
     render() {
         const { todos } = this.state;
         return (
@@ -42,13 +26,13 @@ class TodoApp extends React.Component {
                 />
                 <InputField
                     placeholder="新增待辦清單"
-                    onSubmitEditing={TodoActions._createTodo}
+                    onSubmitEditing={TodoActions.createTodo}
                 />
                 <TodoList
                     todos={todos}
-                    onUpdateTodo={TodoActions._updateTodo}
-                    onToggleTodo={TodoActions._toggleTodo}
-                    onDeleteTodo={TodoActions._deleteTodo}
+                    onUpdateTodo={TodoActions.updateTodo}
+                    onToggleTodo={TodoActions.toggleTodo}
+                    onDeleteTodo={TodoActions.deleteTodo}
                 />
             </div>
         );

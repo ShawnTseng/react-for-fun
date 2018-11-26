@@ -1,22 +1,19 @@
 const {
-    TodoActions,
-    TodoStore,
-    InputField,
     TodoHeader,
+    InputField,
     TodoList
 } = window.App;
 
+/* TodoApp */
 class TodoApp extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            // 3. 初始資料改為從 TodoStore 中拿取
-            todos: TodoStore.getAll()
-        };
-    }
-
     render() {
-        const { todos } = this.state;
+        const {
+            todos,
+            onCreateTodo,
+            onUpdateTodo,
+            onToggleTodo,
+            onDeleteTodo
+        } = this.props;
         return (
             <div>
                 <TodoHeader
@@ -26,33 +23,17 @@ class TodoApp extends React.Component {
                 />
                 <InputField
                     placeholder="新增待辦清單"
-                    onSubmitEditing={TodoActions.createTodo}
+                    onSubmitEditing={onCreateTodo}
                 />
                 <TodoList
                     todos={todos}
-                    onUpdateTodo={TodoActions.updateTodo}
-                    onToggleTodo={TodoActions.toggleTodo}
-                    onDeleteTodo={TodoActions.deleteTodo}
+                    onUpdateTodo={onUpdateTodo}
+                    onToggleTodo={onToggleTodo}
+                    onDeleteTodo={onDeleteTodo}
                 />
             </div>
         );
     }
-
-    componentDidMount() {
-        // 4. 向 Server 請求資料改為調用 TodoActions
-        TodoActions.loadTodos();
-        // 5. 向 TodoStore 註冊監聽器：
-        //    當監聽器被觸發，便讓 state 與 TodoStore 資料同步
-        this._removeChangeListener = TodoStore.addChangeListener(
-            () => this.setState({ todos: TodoStore.getAll() })
-        );
-    }
-
-    componentWillUnmount() {
-        // 6. 向 TodoStore 註銷監聽器
-        this._removeChangeListener();
-    }
-
 }
 
 window.App.TodoApp = TodoApp;

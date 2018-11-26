@@ -18,7 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/EventEmitter/5.0.0/EventEmitter.js"></script>
     <script>window.App = {}</script>
     <script type="text/babel" src="./dispatcher/AppDispatcher.jsx"></script>
-    <script type="text/babel" src = "./constants/ActionTypes.jsx"></script>
+    <script type="text/babel" src="./constants/ActionTypes.jsx"></script>
     <script type="text/babel" src="./actions/TodoActions.jsx"></script>
     <script type="text/babel" src="./store/TodoStore.jsx"></script>
 
@@ -27,10 +27,11 @@
     <script type="text/babel" src="./components/TodoItem.jsx"></script>
     <script type="text/babel" src="./components/TodoList.jsx"></script>
     <script type="text/babel" src="./components/TodoApp.jsx"></script>
+    <script type="text/babel" src="./components/TodoAppContainer.jsx"></script>
     <script type="text/babel">
-        const { TodoApp } = window.App;
+        const { TodoAppContainer } = window.App;
         ReactDOM.render(
-        <TodoApp />,
+        <TodoAppContainer />,
         document.getElementById('app')
         );
     </script>

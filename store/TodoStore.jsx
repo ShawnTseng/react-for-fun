@@ -8,70 +8,78 @@ const _emitter = new EventEmitter();
 let _todos = [];
 
 const _createTodo = (todos, title) => {
-    todos.push({
-        id: todos[todos.length - 1].id + 1,
-        title,
-        completed: false
-    });
-    return todos;
+    // 1. 每次新增項目，就回傳新陣列
+    return [
+        ...todos,
+        {
+            id: todos[todos.length - 1].id + 1,
+            title,
+            completed: false
+        }
+    ];
 };
 
 const _updateTodo = (todos, id, title) => {
-    const target = todos.find((todo) => todo.id === id);
-    if (target) target.title = title;
-    return todos;
+    const idx = todos.findIndex((todo) => todo.id === id);
+    if (idx === -1) return todos;
+
+    // 2. 每次修改項目，就回傳新陣列
+    const newTodos = [...todos];
+    newTodos[idx] = {
+        ...todos[idx],
+        title
+    };
+    return newTodos;
 };
 
 const _toggleTodo = (todos, id, completed) => {
-    const target = todos.find((todo) => todo.id === id);
-    if (target) target.completed = completed;
-    return todos;
+    const idx = todos.findIndex((todo) => todo.id === id);
+    if (idx === -1) return todos;
+    // 3. 每次切換狀態，就回傳新陣列
+    const newTodos = [...todos];
+
+    newTodos[idx] = {
+        ...todos[idx],
+        completed
+    };
+    console.log(newTodos);
+    return newTodos;
 };
 
 const _deleteTodo = (todos, id) => {
     const idx = todos.findIndex((todo) => todo.id === id);
-    if (idx !== -1) todos.splice(idx, 1);
-    return todos;
+    if (idx === -1) return todos;
+
+    const newTodos = [...todos];
+    newTodos.splice(idx, 1);
+    return newTodos;
 };
 
-window.App.TodoStore = {
-    // 6. 回傳 todos 陣列
-    getAll() {
+const { ReduceStore } = FluxUtils;
+
+// https://facebook.github.io/flux/docs/flux-utils.html#reducestore-t
+class TodoStore extends ReduceStore {
+    // 1. 回傳初始狀態
+    getInitialState() {
         return _todos;
-    },
+    }
 
-    // 3. 提供註冊改變事件的 API，並回傳註銷函數
-    addChangeListener(callback) {
-        _emitter.on(CHANGE_EVENT, callback);
-        return () => _emitter.removeListener(CHANGE_EVENT, callback);
-    },
-
-    // 4. 向 AppDispatcher 註冊 callback，並根據 action.type 改變 todos
-    //
-    //    註：register() 會回傳 token，可以用在當 Store 有依賴關係，必須調整 dispatch 順序時。
-    //    例：Dispatcher.waitFor([ token1, token2 ])
-    dispatchToken: AppDispatcher.register((action) => {
+    // 2. 實作 reduce()，該函數提供"舊狀態","action"，必須回傳"新狀態"
+    reduce(state, action) {
         switch (action.type) {
             case ActionTypes.LOAD_TODOS_SUCCESS:
-                _todos = action.todos;
-                _emitter.emit(CHANGE_EVENT);
-                break;
+                return action.todos;
             case ActionTypes.CREATE_TODO:
-                _todos = _createTodo(_todos, action.title);
-                _emitter.emit(CHANGE_EVENT);
-                break;
+                return _createTodo(state, action.title);
             case ActionTypes.UPDATE_TODO:
-                _todos = _updateTodo(_todos, action.id, action.title);
-                _emitter.emit(CHANGE_EVENT);
-                break;
+                return _updateTodo(state, action.id, action.title);
             case ActionTypes.TOGGLE_TODO:
-                _todos = _toggleTodo(_todos, action.id, action.completed);
-                _emitter.emit(CHANGE_EVENT);
-                break;
+                return _toggleTodo(state, action.id, action.completed);
             case ActionTypes.DELETE_TODO:
-                _todos = _deleteTodo(_todos, action.id);
-                _emitter.emit(CHANGE_EVENT);
-                break;
+                return _deleteTodo(state, action.id);
+            default:
+                return state;
         }
-    })
+    }
 }
+window.App.TodoStore = new TodoStore(AppDispatcher);

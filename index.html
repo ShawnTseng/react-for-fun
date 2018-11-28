@@ -17,6 +17,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flux/2.1.1/Flux.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/EventEmitter/5.0.0/EventEmitter.js"></script>
     <script src="https://cdn.rawgit.com/facebook/flux/master/dist/FluxUtils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.4.0/redux.js"></script>
+
     <script>window.App = {}</script>
     <script type="text/babel" src="./dispatcher/AppDispatcher.jsx"></script>
     <script type="text/babel" src="./constants/ActionTypes.jsx"></script>
@@ -31,14 +33,7 @@
     <script type="text/babel" src="./components/TodoList.jsx"></script>
     <script type="text/babel" src="./components/TodoApp.jsx"></script>
     <script type="text/babel" src="./components/TodoAppContainer.jsx"></script>
-    <script type="text/babel">
-        const { TodoAppContainer } = window.App;
-        ReactDOM.render(
-        <TodoAppContainer />,
-        document.getElementById('app')
-        );
-    </script>
-
+    <script type="text/babel" src="./main.jsx"></script>
 </body>
 
 </html>

@@ -1,11 +1,6 @@
+const { ReduceStore } = FluxUtils;
+
 const { ActionTypes, AppDispatcher } = window.App;
-
-const CHANGE_EVENT = 'CHANGE';
-
-const _emitter = new EventEmitter();
-
-// 1. 管理 todos 資料
-let _todos = [];
 
 const _createTodo = (todos, title) => {
     // 1. 每次新增項目，就回傳新陣列
@@ -55,13 +50,11 @@ const _deleteTodo = (todos, id) => {
     return newTodos;
 };
 
-const { ReduceStore } = FluxUtils;
-
 // https://facebook.github.io/flux/docs/flux-utils.html#reducestore-t
 class TodoStore extends ReduceStore {
     // 1. 回傳初始狀態
     getInitialState() {
-        return _todos;
+        return [];
     }
 
     // 2. 實作 reduce()，該函數提供"舊狀態","action"，必須回傳"新狀態"

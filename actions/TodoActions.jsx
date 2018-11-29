@@ -76,5 +76,5 @@ window.App.TodoReduxActions = {
                     todos
                 }));
         };
-    }, x
+    },
 }

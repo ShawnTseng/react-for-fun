@@ -1,12 +1,25 @@
-const { createStore, combineReducers } = Redux;
+const { createStore, combineReducers, applyMiddleware } = Redux;
 const { TodoApp, reducers } = window.App;
 
-// 1. 將 reducers 集合物件轉換成一個 reducer 函數
-const composedReducer = combineReducers(reducers);
-// 2. 使用 reducer 函數，建立 Store 實例，Store 會將改變狀態邏輯委託給 reducer 實作
-const store = createStore(composedReducer);
+const thunkMiddleware = ({ dispatch, getState }) => {
+    return (next) => (action) => {
+        // 1. 判斷 action 是否為 thunk function，是的話執行它，並將 dispatch 函數傳進去
+        if (typeof action === 'function') {
+            return action(dispatch, getState);
+        }
+        // 2. 如果 action 不是 thunk，將 action 交給下一個 middleware
+        return next(action);
+    };
+};
 
-// 3. 將原本 index.html 中的程式移來這裡
+const composedReducer = combineReducers(reducers);
+const store = createStore(
+    composedReducer,
+    // 1. 將 middleware 依序傳遞進 applyMiddleware
+    // 2. 將回傳的 enhancer 函數傳遞給 createStore
+    applyMiddleware(thunkMiddleware)
+);
+
 const { TodoAppContainer } = window.App;
 ReactDOM.render(
     <TodoAppContainer />,

@@ -1,5 +1,6 @@
 const { createStore, combineReducers, applyMiddleware } = Redux;
 const { TodoApp, reducers } = window.App;
+const { Provider } = ReactRedux;
 
 const thunkMiddleware = ({ dispatch, getState }) => {
     return (next) => (action) => {
@@ -22,6 +23,9 @@ const store = createStore(
 
 const { TodoAppContainer } = window.App;
 ReactDOM.render(
-    <TodoAppContainer />,
+    // 使用 Provider 元件包覆 TodoAppContainer，並傳遞 store 實例進去
+    <Provider store={store}>
+        <TodoAppContainer />
+    </Provider>,
     document.getElementById('app')
 );
